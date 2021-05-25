@@ -46,6 +46,7 @@ else()
 
     install(
         FILES ${CMAKE_CURRENT_BINARY_DIR}/FlowLayoutConfig.cmake
+        FILES ${CMAKE_CURRENT_BINARY_DIR}/FlowLayoutConfigVersion.cmake
         DESTINATION lib/cmake/FlowLayout)
 
     # 打包
