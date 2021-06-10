@@ -18,3 +18,6 @@ lay->setWidgetWidth(300);
 
 在作为子项目被包含的时候默认使用的是静态构建。作为单独工程使用的时候构建的是动态库。可以使用 make install 安装到标准路径下。
 
+# 说明
+
+该项目最初是作为 https://github.com/cathaysia/digikamflowplugin 的子项目存在的。具体用法可以参考其 v0.0.6 及之前的代码。
