@@ -1,28 +1,3 @@
-/*
- * Copyright (c) 2021 <copyright holder> <email>
- *
- * Permission is hereby granted, free of charge, to any person
- * obtaining a copy of this software and associated documentation
- * files (the "Software"), to deal in the Software without
- * restriction, including without limitation the rights to use,
- * copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the
- * Software is furnished to do so, subject to the following
- * conditions:
- *
- * The above copyright notice and this permission notice shall be
- * included in all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
- * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
- * OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
- * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
- * HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
- * WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
- * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
- * OTHER DEALINGS IN THE SOFTWARE.
- */
-
 #include "flowlayout.h"
 #include <QDebug>
 #include <QRect>
@@ -68,10 +43,7 @@ QLayoutItem* FlowLayout::takeAt(int index) {
 }
 void FlowLayout::setGeometry(const QRect& r) {
     QLayout::setGeometry(r);
-    if(width_ != -1) doMonoLayout();
-    else
-        assert(0);
-    // 对子项进行布局
+    doMonoLayout();
 }
 void FlowLayout::setWidgetWidth(size_t size) {
     this->width_ = size;
@@ -89,7 +61,6 @@ const QList<QLayoutItem*> FlowLayout::list() const {
 }
 
 void FlowLayout::doMonoLayout() {
-    assert(width_ != -1);
     if(list_.length() <= 0) return;
     // 一行内有 n 个 widget 和 n-1 个 spacing
     // n*width_ + (n-1)*spacing = this->width()
