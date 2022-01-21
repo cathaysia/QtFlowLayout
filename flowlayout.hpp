@@ -10,6 +10,10 @@ namespace Z {
 class FlowLayout : public QLayout {
     Q_OBJECT
 public:
+    enum class Style : unsigned char { Cow, Square };
+    Q_ENUM(Style);
+    Q_PROPERTY(qreal refWidth_ READ refWidth WRITE setRefWidth);
+    Q_PROPERTY(Style style_ READ style WRITE setStyle);
     FlowLayout(QWidget* parent = nullptr);
     ~FlowLayout();
     // QLayout interface
@@ -27,18 +31,23 @@ public:
 
     void  setRefWidth(qreal width);
     qreal refWidth();
+    void  setStyle(Style style);
+    Style style();
 
 signals:
     void innerHeightChanged(qreal innerHeight);
     void refWidthChanged(qreal refwidth);
+    void styleChanged(Style style);
 
 protected:
     // this means every items's width is equal
     void doMonoLayout();
     // void doRowLayout();
-    // void doSquareLayout();
+    // this means every items's width and height is equal
+    void doSquareLayout();
 
 private:
+    Style               style_ = Style::Cow;
     QList<QLayoutItem*> list_;
     qreal               refwidth_ = -1;
     qreal               innerHeight_;

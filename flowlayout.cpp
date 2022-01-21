@@ -12,6 +12,13 @@ FlowLayout::FlowLayout(QWidget* parent) : QLayout(parent), innerHeight_(0), time
     // delay refresh
     timer_->setInterval(300);
     connect(timer_, &QTimer::timeout, this, &FlowLayout::update);
+    connect(this, &FlowLayout::styleChanged, [this]() {
+        this->setGeometry(this->geometry());
+    });
+    // WARNING: this code should be delete then
+    connect(this, &FlowLayout::innerHeightChanged, [this](qreal innerHeight) {
+        this->parentWidget()->resize(this->geometry().width(), innerHeight);
+    });
 }
 FlowLayout::~FlowLayout() {
     delete timer_;
@@ -42,7 +49,14 @@ QLayoutItem* FlowLayout::takeAt(int index) {
 }
 void FlowLayout::setGeometry(const QRect& r) {
     QLayout::setGeometry(r);
-    doMonoLayout();
+    if(style_ == Style::Cow) {
+        doMonoLayout();
+        return;
+    }
+    if(style_ == Style::Square) {
+        doSquareLayout();
+        return;
+    }
 }
 void FlowLayout::setWidgetWidth(size_t size) {
     this->setRefWidth(size);
@@ -57,6 +71,14 @@ qreal FlowLayout::refWidth() {
 size_t FlowLayout::widgetWidth() {
     return refWidth();
 }
+void FlowLayout::setStyle(Style style) {
+    this->style_ = style;
+    emit this->styleChanged(style_);
+}
+
+FlowLayout::Style FlowLayout::style() {
+    return this->style_;
+}
 
 qreal FlowLayout::innerHeight() {
     return innerHeight_;
@@ -67,7 +89,7 @@ const QList<QLayoutItem*> FlowLayout::list() const {
 }
 
 void FlowLayout::doMonoLayout() {
-    assert(refwidth_ != -1);
+    if(refwidth_ <= 0) refwidth_ = 300;
     if(list_.length() <= 0) return;
     // a line has n widgets an n-1 spacing
     // n*refwidth_ + (n-1)*spacing = this->width()
@@ -75,6 +97,7 @@ void FlowLayout::doMonoLayout() {
     int n = (this->geometry().width() + spacing()) / (refwidth_ + spacing());
     // n should always less than list_.length()
     n = std::min(n, list_.length());
+    n = n == 0 ? 1 : n;
 
     qreal        realWidth = refwidth_ + (this->geometry().width() - n * refwidth_) / n;
     QVector<int> yFlags(n);
@@ -94,8 +117,28 @@ void FlowLayout::doMonoLayout() {
     }
     innerHeight_ = *std::max_element(yFlags.begin(), yFlags.end());
     emit this->innerHeightChanged(innerHeight_);
-    // WARNING: this code should be delete then
-    // set parent's size
-    this->parentWidget()->resize(this->geometry().width(), innerHeight_);
+}
+
+void FlowLayout::doSquareLayout() {
+    if(refwidth_ <= 0) refwidth_ = 300;
+    if(list_.length() <= 0) return;
+    int n = (this->geometry().width() + spacing()) / (refwidth_ + spacing());
+    // n should always less than list_.length()
+    n = std::min(n, list_.length());
+    n = n == 0 ? 1 : n;
+
+    qreal realWidth = refwidth_ + (this->geometry().width() - n * refwidth_) / n;
+    int   posY      = 0;
+    int   posX      = 0;
+    for(auto& item: list_) {
+        if(posX > geometry().width()) {
+            posY += realWidth + spacing();
+            posX = 0;
+        };
+        item->setGeometry(QRect(posX, posY, realWidth, realWidth));
+        posX += spacing() + realWidth;
+    }
+    this->innerHeight_ = posY + spacing() + realWidth;
+    emit innerHeightChanged(innerHeight_);
 }
 }    // namespace Z
