@@ -23,12 +23,14 @@ public:
     [[deprecated]] const QList<QLayoutItem*> list() const;
     [[deprecated]] void                      setWidgetWidth(size_t size);
     [[deprecated]] qreal                     innerHeight();
+    [[deprecated]] inline size_t             widgetWidth();
 
-    void          setRefWidth(qreal width);
-    inline size_t widgetWidth();
+    void  setRefWidth(qreal width);
+    qreal refWidth();
 
 signals:
     void innerHeightChanged(qreal innerHeight);
+    void refWidthChanged(qreal refwidth);
 
 protected:
     // this means every items's width is equal

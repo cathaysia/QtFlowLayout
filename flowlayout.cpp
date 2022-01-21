@@ -49,9 +49,13 @@ void FlowLayout::setWidgetWidth(size_t size) {
 }
 void FlowLayout::setRefWidth(qreal width) {
     this->refwidth_ = width;
+    emit this->refWidthChanged(width);
+}
+qreal FlowLayout::refWidth() {
+    return refwidth_;
 }
 size_t FlowLayout::widgetWidth() {
-    return refwidth_;
+    return refWidth();
 }
 
 qreal FlowLayout::innerHeight() {
