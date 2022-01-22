@@ -13,12 +13,14 @@ namespace Z {
 FlowLayout::FlowLayout(QWidget* parent) : QLayout(parent), innerHeight_(0) {
     // delay refresh
     connect(this, &FlowLayout::styleChanged, [this]() {
-        this->setGeometry(this->geometry());
+        this->update();
+    });
+    connect(this, &FlowLayout::refWidthChanged, [this]() {
+        this->update();
     });
     // WARNING: this code should be delete then
     connect(this, &FlowLayout::innerHeightChanged, [this](qreal innerHeight) {
-        qDebug() << "innerHeightChanged 信号被触发";
-        this->parentWidget()->resize(this->geometry().width(), innerHeight);
+        this->update();
     });
 }
 FlowLayout::~FlowLayout() {
@@ -47,7 +49,7 @@ QLayoutItem* FlowLayout::takeAt(int index) {
 }
 void FlowLayout::setGeometry(const QRect& r) {
     QLayout::setGeometry(r);
-    if(style_ == Style::Cow) {
+    if(style_ == Style::Col) {
         doMonoLayout();
     } else if(style_ == Style::Square) {
         doSquareLayout();
