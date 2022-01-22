@@ -10,10 +10,8 @@
 #include <typeinfo>
 
 namespace Z {
-FlowLayout::FlowLayout(QWidget* parent) : QLayout(parent), innerHeight_(0), timer_ { new QTimer } {
+FlowLayout::FlowLayout(QWidget* parent) : QLayout(parent), innerHeight_(0) {
     // delay refresh
-    timer_->setInterval(300);
-    connect(timer_, &QTimer::timeout, this, &FlowLayout::update);
     connect(this, &FlowLayout::styleChanged, [this]() {
         this->setGeometry(this->geometry());
     });
@@ -24,7 +22,6 @@ FlowLayout::FlowLayout(QWidget* parent) : QLayout(parent), innerHeight_(0), time
     });
 }
 FlowLayout::~FlowLayout() {
-    delete timer_;
     QLayoutItem* item;
     while((item = FlowLayout::takeAt(0))) {
         delete item;
@@ -34,8 +31,6 @@ FlowLayout::~FlowLayout() {
 
 void FlowLayout::addItem(QLayoutItem* item) {
     list_.append(item);
-    // if there has no update, then item will overlap before resize
-    timer_->start();
 }
 int FlowLayout::count() const {
     return list_.length();
@@ -96,9 +91,6 @@ void FlowLayout::setInnerHeight(qreal height) {
 }
 
 void FlowLayout::doMonoLayout() {
-    static int times = 0;
-    qDebug() << "第 " << times << " 次进入 Mono 函数";
-    ++times;
     if(refwidth_ <= 0) refwidth_ = 300;
     if(list_.length() <= 0) return;
     // a line has n widgets an n-1 spacing
@@ -129,9 +121,6 @@ void FlowLayout::doMonoLayout() {
 }
 
 void FlowLayout::doSquareLayout() {
-    static int times = 0;
-    qDebug() << "第 " << times << " 次进入函数";
-    ++times;
     if(refwidth_ <= 0) refwidth_ = 300;
     if(list_.length() <= 0) return;
     int n = (this->geometry().width() + spacing()) / (refwidth_ + spacing());
@@ -153,9 +142,6 @@ void FlowLayout::doSquareLayout() {
     this->setInnerHeight(posY + spacing() + realWidth);
 }
 void FlowLayout::doRowLayout() {
-    static size_t times = 0;
-    qDebug() << "第 " << times << " 进入函数";
-    ++times;
     if(refwidth_ <= 0) refwidth_ = 300;
     if(list_.length() <= 0) return;
     int n = (this->geometry().width() + spacing()) / (refwidth_ + spacing());

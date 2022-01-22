@@ -53,7 +53,6 @@ private:
     QList<QLayoutItem*> list_;
     qreal               refwidth_ = 300;
     qreal               innerHeight_;
-    QTimer*             timer_;
 };
 
 }    // namespace Z
