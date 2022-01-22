@@ -6,10 +6,6 @@ project(
   LANGUAGES CXX
 )
 set(CMAKE_CXX_STANDARD 17)
-
 set(CMAKE_AUTOMOC ON)
 
-add_library(FlowLayout STATIC flowlayout.cpp flowlayout.h flowlayout.hpp)
-
-find_package(Qt5 COMPONENTS Widgets REQUIRED)
-target_link_libraries(FlowLayout PRIVATE Qt5::Widgets)
+add_subdirectory(src)
