@@ -2,19 +2,41 @@
 
 #include <QDebug>
 #include <QHBoxLayout>
+#include <QMenuBar>
 #include <QRandomGenerator>
 #include <QTime>
+#include <QToolBar>
 
 MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent), container(new QWidget(this)) {
     this->setCentralWidget(container);
-    container->setLayout(new Z::FlowLayout);
+    auto lay = new Z::FlowLayout;
+    container->setLayout(lay);
 
-    QPalette pa;
+    auto menbar = menuBar()->addMenu("Menu");
+
+    menbar->addAction("RefWidth", [lay]() {
+        lay->setRefWidth(700);
+    });
+
+    auto act       = menuBar()->addAction("Change Style");
+    auto styleMenu = new QMenu;
+    act->setMenu(styleMenu);
+    styleMenu->addAction("Row", [lay]() {
+        lay->setStyle(Z::FlowLayout::Style::Row);
+    });
+
+    styleMenu->addAction("Col", [lay]() {
+        lay->setStyle(Z::FlowLayout::Style::Col);
+    });
+    styleMenu->addAction("Square", [lay]() {
+        lay->setStyle(Z::FlowLayout::Style::Square);
+    });
+    auto rgb = []() -> unsigned {
+        return QRandomGenerator::system()->bounded(0, 255);
+    };
     for(int i = 0; i < 10; ++i) {
-        pa.setColor(QPalette::Window, Qt::white);
         auto lbl = new QLabel();
-        lbl->setStyleSheet("QLabel{background-color:rgb(200,101,102);}");
-        lbl->resize(300, 300);
+        lbl->setStyleSheet(QString("QLabel{background-color:rgb(%1,%2,%3);}").arg(rgb()).arg(rgb()).arg(rgb()));
         qDebug() << lbl->sizeHint();
         container->layout()->addWidget(lbl);
     }

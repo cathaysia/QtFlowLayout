@@ -1,5 +1,3 @@
-set(CMAKE_AUTOMOC ON)
-
 add_executable(layoutTest main.cpp mainwindow.cpp mainwindow.hpp)
 
 find_package(Qt5 COMPONENTS Widgets REQUIRED)
