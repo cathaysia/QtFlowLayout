@@ -4,13 +4,18 @@
 #include <QHBoxLayout>
 #include <QMenuBar>
 #include <QRandomGenerator>
+#include <QScrollArea>
 #include <QTime>
 #include <QToolBar>
 
-MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent), container(new QWidget(this)) {
-    this->setCentralWidget(container);
+MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent), container_(new QWidget(this)) {
+    QScrollArea* area = new QScrollArea(this);
+    area->setWidgetResizable(false);
+    this->setCentralWidget(area);
+    area->setWidget(container_);
+
     auto lay = new Z::FlowLayout;
-    container->setLayout(lay);
+    container_->setLayout(lay);
 
     auto menbar = menuBar()->addMenu("Menu");
 
@@ -38,6 +43,14 @@ MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent), container(new QWi
         auto lbl = new QLabel();
         lbl->setStyleSheet(QString("QLabel{background-color:rgb(%1,%2,%3);}").arg(rgb()).arg(rgb()).arg(rgb()));
         qDebug() << lbl->sizeHint();
-        container->layout()->addWidget(lbl);
+        container_->layout()->addWidget(lbl);
     }
+    connect(lay, &Z::FlowLayout::innerHeightChanged, [this, area](qreal innerHeight) {
+        container_->resize(container_->width(), innerHeight);
+        qDebug() << container_->geometry();
+    });
+}
+
+void MainWindow::resizeEvent(QResizeEvent* event) {
+    container_->resize(this->size().width(), container_->size().height());
 }
