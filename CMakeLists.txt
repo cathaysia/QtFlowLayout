@@ -9,3 +9,8 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_AUTOMOC ON)
 
 add_subdirectory(src)
+
+include(CTest)
+
+add_subdirectory(test)
+

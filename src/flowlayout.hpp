@@ -49,7 +49,7 @@ protected:
     void setInnerHeight(qreal height);
 
 private:
-    Style               style_ = Style::Square;
+    Style               style_ = Style::Cow;
     QList<QLayoutItem*> list_;
     qreal               refwidth_ = 300;
     qreal               innerHeight_;

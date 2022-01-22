@@ -97,7 +97,7 @@ void FlowLayout::setInnerHeight(qreal height) {
 
 void FlowLayout::doMonoLayout() {
     static int times = 0;
-    qDebug() << "第 " << times << " 次进入函数";
+    qDebug() << "第 " << times << " 次进入 Mono 函数";
     ++times;
     if(refwidth_ <= 0) refwidth_ = 300;
     if(list_.length() <= 0) return;
