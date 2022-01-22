@@ -23,7 +23,7 @@ errorformat=%f:%l:%m
 save=1
 
 [project-run]
-command=ctest --output-on-failure
-cwd=$(VIM_ROOT)/build/Debug
+command=./layoutTest
+cwd=$(VIM_ROOT)/build/Debug/test
 output=terminal
 
