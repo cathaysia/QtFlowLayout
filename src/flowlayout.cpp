@@ -144,97 +144,28 @@ void FlowLayout::doSquareLayout() {
     this->setInnerHeight(posY + spacing() + realWidth);
 }
 void FlowLayout::doRowLayout() {
+    // Just a simple algorithm, scale the last item evert line
+    // here refwidth_ become realHeight
     if(refwidth_ <= 0) refwidth_ = 300;
     if(list_.length() <= 0) return;
-    int n = (this->geometry().width() + spacing()) / (refwidth_ + spacing());
-    // n should always less than list_.length()
-    n = std::min(n, list_.length());
-    n = n == 0 ? 1 : n;
 
-    qreal realWidth = refwidth_ + (this->geometry().width() - n * refwidth_) / n;
-
-    /**
-     * For this layout, can be abstract to a algorithm:
-     * Give a array A, then split it to some sub-array,
-     * ask every sub-array's sum asme as number b,
-     * and the sum of every sub-array's variance be min
-     *
-     * I just take a simple algorithm:
-     * 1. Count how many sub-array need, and mark as n
-     * 2. order array A, then extract the smallest n items
-     * 3. shuffle array A
-     * 4. split A to n sub-array, and every array's sum less than b
-     * 5. Choose items that get from step 2, then append sub-array
-     */
-    QList<QLayoutItem*> cpy = list_;
-    std::make_heap(cpy.begin(), cpy.begin() + n, [](QLayoutItem* a, QLayoutItem* b) {
-        return a->sizeHint().rwidth() > a->sizeHint().rwidth();
-    });
-    for(int i = n; i < cpy.length(); ++i) {
-        if(cpy[i] < cpy[0]) {
-            std::swap(cpy[i], cpy[0]);
-            std::make_heap(cpy.begin(), cpy.begin() + n, [](QLayoutItem* a, QLayoutItem* b) {
-                return a->sizeHint().rwidth() > b->sizeHint().rwidth();
-            });
-        }
-    }
-    // From now, list[0]->list[n] is the smallest items.
-    // then come to step 4
-    QList<QList<QLayoutItem*>> container;
-
-    auto sumItems = [](QList<QLayoutItem*>& item) -> qreal {
-        qreal sum = 0;
-        for(auto& it: item) { sum += it->sizeHint().rwidth(); }
-        return sum;
+    // picW/picH = realW / realH
+    auto realW = [this](QLayoutItem* item) -> qreal {
+        return item->sizeHint().rwidth() * refwidth_ / item->sizeHint().rheight();
     };
-    QList<QLayoutItem*> temp;
-    for(int i = n; i < cpy.length(); ++i) {
-        if(sumItems(temp) + cpy[i]->sizeHint().rwidth() > geometry().size().width()) {
-            container.push_back(temp);
-            temp.clear();
+
+    int posX = 0;
+    int posY = 0;
+    for(QLayoutItem* it: list_) {
+        if(posX + realW(it) > geometry().width()) {
+            it->setGeometry(QRect(posX, posY, geometry().width() - spacing() - posX, refwidth_));
+            posX = 0;
+            posY += spacing() + refwidth_;
+            continue;
         }
-        temp.push_back(cpy[n]);
+        it->setGeometry(QRect(posX, posY, realW(it), refwidth_));
+        posX += spacing() + realW(it);
     }
-    container.push_back(temp);
-    // for step 5
-    // sort from largest to smallest
-    std::sort(container.begin(), container.end(), [&](auto& a, auto& b) {
-        return sumItems(a) > sumItems(b);
-    });
-    // sort from smallest to largest
-    std::sort(cpy.begin(), cpy.end(), [](QLayoutItem* a, QLayoutItem* b) {
-        return a->sizeHint().rwidth() < a->sizeHint().rwidth();
-    });
-    for(int i = 0; i < n; ++i) {
-        //
-        if(i == container.length() || (i == cpy.size())) break;
-        container[i].push_back(cpy[i]);
-    }
-    // now, set Geometry
-    qreal posX;
-    qreal posY = 0;
-    for(QList<QLayoutItem*>& lst: container) {
-        posX = 0;
-        for(QLayoutItem* item: lst) {
-            item->setGeometry(QRect(posX, posY, 110, 200));
-            posX = 120;
-        }
-        posY += 210;
-        // // sumWidth/width = realHeigth/refwidth_
-        // // realHeigth = sumWidth * refwidth_/realWidth
-        // qreal realHeigth = sumItems(lst) * refwidth_ / geometry().width();
-        // posX             = 0;
-        // qDebug() << "lst.size: " << lst.size();
-        // for(QLayoutItem* item: lst) {
-        //     // itemHeight/ realHeigth = itemWidth/realWidth
-        //     // realWidth = itemWidth * realHeigth / itemHeight
-        //     realWidth = item->sizeHint().rwidth() * realHeigth / item->sizeHint().rheight();
-        //     item->setGeometry(QRect(posX, posY, realWidth, realHeigth));
-        //     qDebug() << item->geometry();
-        //     posX += spacing() + realWidth;
-        // }
-        // posY += realHeigth + spacing();
-    }
-    this->setInnerHeight(posY);
+    this->setInnerHeight(posY + refwidth_);
 }
 }    // namespace Z
