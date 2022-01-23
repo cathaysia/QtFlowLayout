@@ -20,7 +20,7 @@ FlowLayout::FlowLayout(QWidget* parent) : QLayout(parent), innerHeight_(0) {
     });
     // WARNING: this code should be delete then
     connect(this, &FlowLayout::innerHeightChanged, [this](qreal innerHeight) {
-        this->update();
+        this->parentWidget()->resize(this->geometry().width(), innerHeight);
     });
 }
 FlowLayout::~FlowLayout() {
