@@ -24,10 +24,6 @@ public:
     QLayoutItem* itemAt(int index) const override;
     QLayoutItem* takeAt(int index) override;
 
-    [[deprecated]] const QList<QLayoutItem*> list() const;
-    [[deprecated]] void                      setWidgetWidth(size_t size);
-    [[deprecated]] inline size_t             widgetWidth();
-
     void  setRefWidth(qreal width);
     qreal refWidth();
     void  setStyle(Style style);
@@ -41,7 +37,7 @@ signals:
 
 protected:
     // this means every items's width is equal
-    void doMonoLayout();
+    void doColLayout();
     // this means every items's height is equal(not complete)
     void doRowLayout();
     // this means every items's width and height is equal

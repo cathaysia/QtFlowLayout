@@ -50,15 +50,12 @@ QLayoutItem* FlowLayout::takeAt(int index) {
 void FlowLayout::setGeometry(const QRect& r) {
     QLayout::setGeometry(r);
     if(style_ == Style::Col) {
-        doMonoLayout();
+        doColLayout();
     } else if(style_ == Style::Square) {
         doSquareLayout();
     } else if(style_ == Style::Row) {
         doRowLayout();
     }
-}
-void FlowLayout::setWidgetWidth(size_t size) {
-    this->setRefWidth(size);
 }
 void FlowLayout::setRefWidth(qreal width) {
     this->refwidth_ = width;
@@ -66,9 +63,6 @@ void FlowLayout::setRefWidth(qreal width) {
 }
 qreal FlowLayout::refWidth() {
     return refwidth_;
-}
-size_t FlowLayout::widgetWidth() {
-    return refWidth();
 }
 void FlowLayout::setStyle(Style style) {
     this->style_ = style;
@@ -83,16 +77,13 @@ qreal FlowLayout::innerHeight() {
     return innerHeight_;
 }
 
-const QList<QLayoutItem*> FlowLayout::list() const {
-    return list_;
-}
 void FlowLayout::setInnerHeight(qreal height) {
     if(height == this->innerHeight_) return;
     this->innerHeight_ = height;
     emit this->innerHeightChanged(this->innerHeight_);
 }
 
-void FlowLayout::doMonoLayout() {
+void FlowLayout::doColLayout() {
     if(refwidth_ <= 0) refwidth_ = 300;
     if(list_.length() <= 0) return;
     // a line has n widgets an n-1 spacing
