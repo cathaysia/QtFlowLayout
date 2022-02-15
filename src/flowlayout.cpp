@@ -11,17 +11,6 @@
 
 namespace Z {
 FlowLayout::FlowLayout(QWidget* parent) : QLayout(parent), innerHeight_(0) {
-    // delay refresh
-    connect(this, &FlowLayout::styleChanged, [this]() {
-        this->update();
-    });
-    connect(this, &FlowLayout::refWidthChanged, [this]() {
-        this->update();
-    });
-    // WARNING: this code should be delete then
-    connect(this, &FlowLayout::innerHeightChanged, [this](qreal innerHeight) {
-        this->parentWidget()->resize(this->geometry().width(), innerHeight);
-    });
 }
 FlowLayout::~FlowLayout() {
     QLayoutItem* item;
@@ -59,14 +48,14 @@ void FlowLayout::setGeometry(const QRect& r) {
 }
 void FlowLayout::setRefWidth(qreal width) {
     this->refwidth_ = width;
-    emit this->refWidthChanged(width);
+    this->update();
 }
 qreal FlowLayout::refWidth() {
     return refwidth_;
 }
 void FlowLayout::setStyle(Style style) {
     this->style_ = style;
-    emit this->styleChanged(style_);
+    this->update();
 }
 
 FlowLayout::Style FlowLayout::style() {
@@ -80,7 +69,6 @@ qreal FlowLayout::innerHeight() {
 void FlowLayout::setInnerHeight(qreal height) {
     if(height == this->innerHeight_) return;
     this->innerHeight_ = height;
-    emit this->innerHeightChanged(this->innerHeight_);
 }
 
 void FlowLayout::doColLayout() {

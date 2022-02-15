@@ -30,11 +30,6 @@ public:
     Style style();
     qreal innerHeight();
 
-signals:
-    void innerHeightChanged(qreal innerHeight);
-    void refWidthChanged(qreal refwidth);
-    void styleChanged(Style style);
-
 protected:
     // this means every items's width is equal
     void doColLayout();

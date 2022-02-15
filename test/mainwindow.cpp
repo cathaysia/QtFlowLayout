@@ -45,10 +45,6 @@ MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent), container_(new QW
         qDebug() << lbl->sizeHint();
         container_->layout()->addWidget(lbl);
     }
-    connect(lay, &Z::FlowLayout::innerHeightChanged, [this, area](qreal innerHeight) {
-        container_->resize(container_->width(), innerHeight);
-        qDebug() << container_->geometry();
-    });
 }
 
 void MainWindow::resizeEvent(QResizeEvent* event) {
