@@ -10,14 +10,10 @@
 #include <typeinfo>
 
 namespace Z {
-FlowLayout::FlowLayout(QWidget* parent) : QLayout(parent), innerHeight_(0) {
-}
+FlowLayout::FlowLayout(QWidget* parent) : QLayout(parent), innerHeight_(0) { }
 FlowLayout::~FlowLayout() {
     QLayoutItem* item;
-    while((item = FlowLayout::takeAt(0))) {
-        delete item;
-        item = nullptr;
-    }
+    while((item = FlowLayout::takeAt(0))) delete item;
 }
 
 void FlowLayout::addItem(QLayoutItem* item) {
