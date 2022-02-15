@@ -100,9 +100,7 @@ void FlowLayout::doColLayout() {
     qreal realHeight;
     int   min = 0;
     for(auto& item: list_) {
-        // realHieght = realWidth*(y/x)
-        // ry/rx=y/x ==> ry=rx*y/x
-        realHeight = realWidth * item->sizeHint().rheight() / item->sizeHint().rwidth();
+        realHeight = item->heightForWidth(realWidth);
         item->setGeometry(QRect(min * (spacing() + realWidth), yFlags[min], realWidth, realHeight));
         yFlags[min] += realHeight + spacing();
         // choose the min elements's index
