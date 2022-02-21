@@ -36,7 +36,6 @@ protected:
     // this means every items's height is equal(not complete)
     void doRowLayout();
     // this means every items's width and height is equal
-    // WARNING: This function can not work normally at now
     void doSquareLayout();
     void setInnerHeight(qreal height);
 
@@ -46,5 +45,5 @@ private:
     qreal               refwidth_ = 300;
     qreal               innerHeight_;
 };
-
+using Style = FlowLayout::Style;
 }    // namespace Z
