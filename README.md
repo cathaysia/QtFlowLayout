@@ -1,23 +1,21 @@
-# FlowLayout
+# This is
 
-一个 Qt 的流式布局，当前只能进行等宽布局。
+A Custom Layout with RowLayout, ColLayout, SquareLayout
 
-# 使用
+# Use
 
-最简单的就是直接作为 CMake 的子项目包含进来。
+The simplest way to use this is include this project a CMake's subproject:
 
 ```cmake
 add_subdirectory(QtFlowLayout)
 ```
 
 ```C++
-auto*const lay = new Z::FlowLayout;
-// 此方法目前必须调用
-lay->setWidgetWidth(300);
+setLayout(new Z::FlowLayout(this));
+layout()->setStyle(Z::FlowLayout::Col);
 ```
 
-在作为子项目被包含的时候默认使用的是静态构建。作为单独工程使用的时候构建的是动态库。可以使用 make install 安装到标准路径下。
+# Note
 
-# 说明
-
-该项目最初是作为 https://github.com/cathaysia/digikamflowplugin 的子项目存在的。具体用法可以参考其 v0.0.6 及之前的代码。
+This project is a project derived from https://github.com/cathaysia/digikamflowplugin, please read
+it's source before using this
