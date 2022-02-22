@@ -27,14 +27,14 @@ MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent), container_(new QW
     auto styleMenu = new QMenu;
     act->setMenu(styleMenu);
     styleMenu->addAction("Row", [lay]() {
-        lay->setStyle(Z::FlowLayout::Style::Row);
+        lay->setStyle(Z::Style::Row);
     });
 
     styleMenu->addAction("Col", [lay]() {
-        lay->setStyle(Z::FlowLayout::Style::Col);
+        lay->setStyle(Z::Style::Col);
     });
     styleMenu->addAction("Square", [lay]() {
-        lay->setStyle(Z::FlowLayout::Style::Square);
+        lay->setStyle(Z::Style::Square);
     });
     auto rgb = []() -> unsigned {
         return QRandomGenerator::system()->bounded(0, 255);
