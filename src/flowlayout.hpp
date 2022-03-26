@@ -7,11 +7,43 @@ class QTimer;
 
 namespace Z {
 
+// 使用类模拟枚举
+struct Style final {
+    static Style Row;
+    static Style Col;
+    static Style Square;
+    int          state_ = 0;
+    explicit Style(int state) : state_(state) { }
+    // QString --> Style
+    Style(const QString& str) {
+        if(str == "Row") state_ = 0;
+        else if(str == "Col")
+            state_ = 1;
+        else if(str == "Square")
+            state_ = 2;
+    }
+    // Style --> QString
+    operator const QString() {
+        switch(state_) {
+            case 0: return QStringLiteral("Row");
+            case 1: return QStringLiteral("Col");
+            case 2: return QStringLiteral("Square");
+        }
+        return QStringLiteral("");
+    }
+
+    bool operator==(Style const& b) {
+        return this->state_ == b.state_;
+    }
+
+    bool operator==(QString const& b) {
+        return this->state_ == (Style)b;
+    }
+};
+
 class FlowLayout : public QLayout {
     Q_OBJECT
 public:
-    enum class Style : unsigned char { Row, Col, Square };
-    Q_ENUM(Style);
     Q_PROPERTY(qreal refWidth_ READ refWidth WRITE setRefWidth);
     Q_PROPERTY(Style style_ READ style WRITE setStyle);
     FlowLayout(QWidget* parent = nullptr);
@@ -45,5 +77,4 @@ private:
     qreal               refwidth_ = 300;
     qreal               innerHeight_;
 };
-using Style = FlowLayout::Style;
 }    // namespace Z

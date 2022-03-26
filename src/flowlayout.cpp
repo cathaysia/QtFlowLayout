@@ -10,6 +10,11 @@
 #include <typeinfo>
 
 namespace Z {
+
+Style Style::Row    = Style(0);
+Style Style::Col    = Style(1);
+Style Style::Square = Style(2);
+
 FlowLayout::FlowLayout(QWidget* parent) : QLayout(parent), innerHeight_(0) { }
 FlowLayout::~FlowLayout() {
     QLayoutItem* item;
@@ -54,7 +59,7 @@ void FlowLayout::setStyle(Style style) {
     this->update();
 }
 
-FlowLayout::Style FlowLayout::style() {
+Z::Style FlowLayout::style() {
     return this->style_;
 }
 
