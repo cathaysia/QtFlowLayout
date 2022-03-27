@@ -2,8 +2,6 @@
 
 #include <QLayout>
 #include <thread>
-class QWidget;
-class QTimer;
 
 namespace Z {
 

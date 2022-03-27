@@ -23,6 +23,7 @@ FlowLayout::~FlowLayout() {
 
 void FlowLayout::addItem(QLayoutItem* item) {
     list_.append(item);
+    invalidate();
 }
 int FlowLayout::count() const {
     return list_.length();
@@ -49,14 +50,14 @@ void FlowLayout::setGeometry(const QRect& r) {
 }
 void FlowLayout::setRefWidth(qreal width) {
     this->refwidth_ = width;
-    this->update();
+    invalidate();
 }
 qreal FlowLayout::refWidth() {
     return refwidth_;
 }
 void FlowLayout::setStyle(Style style) {
     this->style_ = style;
-    this->update();
+    invalidate();
 }
 
 Z::Style FlowLayout::style() {
@@ -70,6 +71,7 @@ qreal FlowLayout::innerHeight() {
 void FlowLayout::setInnerHeight(qreal height) {
     if(height == this->innerHeight_) return;
     this->innerHeight_ = height;
+    invalidate();
 }
 
 void FlowLayout::doColLayout() {
