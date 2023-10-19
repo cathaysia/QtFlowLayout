@@ -35,7 +35,7 @@ struct Style final {
     }
 
     bool operator==(QString const& b) {
-        return this->state_ == (Style)b;
+        return this->state_ == Style(b).state_;
     }
 };
 

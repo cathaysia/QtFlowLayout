@@ -82,7 +82,7 @@ void FlowLayout::doColLayout() {
     // n*(refwidth_+spacing) - spacing = this.width()
     int n = (this->geometry().width() + spacing()) / (refwidth_ + spacing());
     // n should always less than list_.length()
-    n = std::min(n, list_.length());
+    n = std::min(n, (int)list_.length());
     n = n == 0 ? 1 : n;
 
     qreal        realWidth = refwidth_ + (this->geometry().width() - n * refwidth_) / n;
@@ -107,7 +107,7 @@ void FlowLayout::doSquareLayout() {
     if(list_.length() <= 0) return;
     int n = (this->geometry().width() + spacing()) / (refwidth_ + spacing());
     // n should always less than list_.length()
-    n = std::min(n, list_.length());
+    n = std::min(n, (int)list_.length());
     n = n == 0 ? 1 : n;
 
     qreal realWidth = refwidth_ + (this->geometry().width() - n * refwidth_) / n;
